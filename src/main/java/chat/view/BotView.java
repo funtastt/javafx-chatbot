@@ -8,6 +8,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
+import java.io.IOException;
+
+import static chat.server.WeatherForecast.getCoordinatesByLocality;
+import static chat.server.WeatherForecast.sendInfo;
 import static javafx.scene.input.KeyEvent.KEY_PRESSED;
 
 public class BotView extends BaseView {
@@ -44,11 +48,12 @@ public class BotView extends BaseView {
         } else if (isLaunched) {
             if (!message.startsWith("/")) {
                 conversation.appendText("Chat bot command must start with /\n");
+            } else if (message.startsWith("/weather")) {
+                showWeatherInfo(message.split(" ")[1]);
             } else {
                 switch (message) {
                     case "/stop" -> System.exit(0);
                     case "/help" -> conversation.appendText("Help command\n");
-                    case "/weather" -> conversation.appendText("Weather command\n");
                     case "/currency" -> conversation.appendText("Currency command\n");
                     case "/chat" -> redirectToChat();
                     default -> conversation.appendText("Can't handle such command\n");
@@ -59,6 +64,30 @@ public class BotView extends BaseView {
         }
 
 
+    }
+
+    private void showWeatherInfo(String city) {
+        try {
+            if (city.isEmpty()) {
+                conversation.appendText("Please enter a city. Use \"/help\" command if you don't know how");
+                return;
+            }
+            city = city.trim().replaceAll(" ", "+");
+            String geocodingURL = "https://geocoding-api.open-meteo.com/v1/search?name=" + city + "&count=1&language=en&format=json";
+            double[] coordinates = getCoordinatesByLocality(geocodingURL, city);
+
+            String weatherURL = "https://api.open-meteo.com/v1/forecast?latitude=" + coordinates[0] + "&longitude=" + coordinates[1] + "&hourly=temperature_2m&forecast_days=16";
+
+            String response = sendInfo(weatherURL);
+            conversation.appendText("\nShowing weather for your input: " + city + "\n");
+            conversation.appendText(response);
+        } catch (NullPointerException e) {
+            conversation.appendText("Such locality doesn't exist! Please try again...");
+        }
+        catch (IOException e) {
+            System.out.println(e.getMessage());
+            conversation.appendText("Something went wrong! Please try again...");
+        }
     }
 
     private void redirectToChat() {
