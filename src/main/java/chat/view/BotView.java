@@ -11,8 +11,8 @@ import javafx.scene.layout.AnchorPane;
 import java.io.File;
 import java.io.IOException;
 
-import static chat.server.WeatherForecast.getCoordinatesByLocality;
-import static chat.server.WeatherForecast.sendInfo;
+import static chat.server.CurrencyTracker.sendCurrencyInfo;
+import static chat.server.WeatherForecast.*;
 import static javafx.scene.input.KeyEvent.KEY_PRESSED;
 
 public class BotView extends BaseView {
@@ -52,7 +52,7 @@ public class BotView extends BaseView {
             } else if (message.startsWith("/weather")) {
                 showWeatherInfo(message.substring(8));
             } else if (message.startsWith("/currency")) {
-                showCurrencyInfo(message.substring(9));
+                showCurrencyInfo(message.substring(9).trim());
             } else {
                 switch (message) {
                     case "/stop" -> System.exit(0);
@@ -73,10 +73,21 @@ public class BotView extends BaseView {
         conversation.appendText("/stop - use this command to stop the bot and close application\n");
         conversation.appendText("/help - use this command to learn about all the features of the bot\n");
         conversation.appendText("/weather [city] - enter city after space symbol to get average temperature for the next 2 weeks\n");
-        conversation.appendText("/currency [currency] - enter currency after space symbol to get history of currency changes\n");
+        conversation.appendText("/currency [currency] - enter currency after space symbol to get 2 weeks history of currency changes\n");
     }
 
     private void showCurrencyInfo(String currency) {
+        try {
+            String url = "http://api.currencylayer.com/timeframe?access_key=334138957e68d9b368dae65192431b4f&source=" + currency + "&currencies=RUB&start_date=2023-11-13&end_date=2023-11-27";
+            String rawData = readRawData(url);
+            String response = sendCurrencyInfo(rawData);
+            System.out.println(url);
+            System.out.println(rawData);
+            conversation.appendText("\nShowing " + currency.toUpperCase() + " currency change history for the last 2 weeks:\n");
+            conversation.appendText(response + "\n");
+        } catch (IOException e) {
+            conversation.appendText("Something went wrong! Please try again...");
+        }
     }
 
     private void showWeatherInfo(String city) {
@@ -91,13 +102,12 @@ public class BotView extends BaseView {
             String weatherURL = "https://api.open-meteo.com/v1/forecast?latitude=" + coordinates[0] + "&longitude=" + coordinates[1] + "&hourly=temperature_2m&forecast_days=16";
 
             String response = sendInfo(weatherURL);
-            conversation.appendText("\nShowing weather for your input: " + city + "\n");
+            conversation.appendText("\nShowing weather forecast for your input: " + city + "\n");
             conversation.appendText(response);
         } catch (NullPointerException e) {
             conversation.appendText("Such locality doesn't exist! Please try again...");
         }
         catch (IOException e) {
-            System.out.println(e.getMessage());
             conversation.appendText("Something went wrong! Please try again...");
         }
     }

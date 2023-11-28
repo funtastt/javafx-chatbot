@@ -66,10 +66,10 @@ public class WeatherForecast {
         return result.toString();
     }
 
-    private static String readRawData(String geocodingURL) throws IOException {
+    public static String readRawData(String url) throws IOException {
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
-                        new URL(geocodingURL)
+                        new URL(url)
                                 .openConnection()
                                 .getInputStream()));
 
