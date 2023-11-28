@@ -8,6 +8,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
+import java.io.File;
 import java.io.IOException;
 
 import static chat.server.WeatherForecast.getCoordinatesByLocality;
@@ -49,32 +50,43 @@ public class BotView extends BaseView {
             if (!message.startsWith("/")) {
                 conversation.appendText("Chat bot command must start with /\n");
             } else if (message.startsWith("/weather")) {
-                showWeatherInfo(message.split(" ")[1]);
+                showWeatherInfo(message.substring(8));
+            } else if (message.startsWith("/currency")) {
+                showCurrencyInfo(message.substring(9));
             } else {
                 switch (message) {
                     case "/stop" -> System.exit(0);
-                    case "/help" -> conversation.appendText("Help command\n");
-                    case "/currency" -> conversation.appendText("Currency command\n");
+                    case "/help" -> showHelp();
                     case "/chat" -> redirectToChat();
-                    default -> conversation.appendText("Can't handle such command\n");
+                    default -> conversation.appendText("Can't handle such command. Please use \"/help\" command.\n");
                 }
             }
         } else {
             conversation.appendText("You should use \"/start\" firstly!\n");
         }
+    }
 
+    private void showHelp() {
+        conversation.appendText("\nHere are commands that can be used in this bot\n");
 
+        conversation.appendText("/start - the first command required to launch the bot\n");
+        conversation.appendText("/stop - use this command to stop the bot and close application\n");
+        conversation.appendText("/help - use this command to learn about all the features of the bot\n");
+        conversation.appendText("/weather [city] - enter city after space symbol to get average temperature for the next 2 weeks\n");
+        conversation.appendText("/currency [currency] - enter currency after space symbol to get history of currency changes\n");
+    }
+
+    private void showCurrencyInfo(String currency) {
     }
 
     private void showWeatherInfo(String city) {
         try {
             if (city.isEmpty()) {
-                conversation.appendText("Please enter a city. Use \"/help\" command if you don't know how");
                 return;
             }
-            city = city.trim().replaceAll(" ", "+");
-            String geocodingURL = "https://geocoding-api.open-meteo.com/v1/search?name=" + city + "&count=1&language=en&format=json";
-            double[] coordinates = getCoordinatesByLocality(geocodingURL, city);
+            String cityFormatted = city.trim().replaceAll(" ", "+");
+            String geocodingURL = "https://geocoding-api.open-meteo.com/v1/search?name=" + cityFormatted + "&count=1&language=en&format=json";
+            double[] coordinates = getCoordinatesByLocality(geocodingURL, cityFormatted);
 
             String weatherURL = "https://api.open-meteo.com/v1/forecast?latitude=" + coordinates[0] + "&longitude=" + coordinates[1] + "&hourly=temperature_2m&forecast_days=16";
 

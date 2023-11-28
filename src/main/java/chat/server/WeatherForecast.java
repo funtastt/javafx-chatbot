@@ -13,34 +13,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class WeatherForecast {
-    public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
-        String input;
-
-        while (true) {
-            System.out.print("Enter locality to find out the weather forecast: ");
-            try {
-                input = reader.readLine();
-                if (input.isEmpty()) {
-                    break;
-                }
-                input = input.trim().replaceAll(" ", "+");
-                String geocodingURL = "https://geocoding-api.open-meteo.com/v1/search?name=" + input + "&count=1&language=en&format=json";
-                double[] coordinates = getCoordinatesByLocality(geocodingURL, input);
-
-                String weatherURL = "https://api.open-meteo.com/v1/forecast?latitude=" + coordinates[0] + "&longitude=" + coordinates[1] + "&hourly=temperature_2m&forecast_days=16";
-
-                sendInfo(weatherURL);
-            } catch (NullPointerException e) {
-                System.out.println("Such locality doesn't exist! Please try again...");
-            }
-            catch (IOException e) {
-                System.out.println("Something went wrong! Please try again...");
-            }
-        }
-    }
-
     public static double[] getCoordinatesByLocality(String geocodingURL, String input) throws IOException {
         String rawData = readRawData(geocodingURL);
 
