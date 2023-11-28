@@ -19,8 +19,8 @@ public class BotView extends BaseView {
     private TextArea input;
     private TextArea conversation;
     private AnchorPane pane;
-
     private boolean isLaunched = false;
+    private static final String ACCESS_KEY = "334138957e68d9b368dae65192431b4f";
 
     private final EventHandler<KeyEvent> eventHandler = new EventHandler<>() {
         @Override
@@ -72,20 +72,20 @@ public class BotView extends BaseView {
         conversation.appendText("/start - the first command required to launch the bot\n");
         conversation.appendText("/stop - use this command to stop the bot and close application\n");
         conversation.appendText("/help - use this command to learn about all the features of the bot\n");
-        conversation.appendText("/weather [city] - enter city after space symbol to get average temperature for the next 2 weeks\n");
+        conversation.appendText("/weather [city] - enter city after space symbol to get average temperature for the next 16 days\n");
         conversation.appendText("/currency [currency] - enter currency after space symbol to get 2 weeks history of currency changes\n");
     }
 
     private void showCurrencyInfo(String currency) {
         try {
-            String url = "http://api.currencylayer.com/timeframe?access_key=334138957e68d9b368dae65192431b4f&source=" + currency + "&currencies=RUB&start_date=2023-11-13&end_date=2023-11-27";
+            String url = "http://api.currencylayer.com/timeframe?access_key=" + ACCESS_KEY + "&source=" + currency + "&currencies=RUB&start_date=2023-11-13&end_date=2023-11-27";
             String rawData = readRawData(url);
             String response = sendCurrencyInfo(rawData);
             System.out.println(url);
             System.out.println(rawData);
             conversation.appendText("\nShowing " + currency.toUpperCase() + " currency change history for the last 2 weeks:\n");
             conversation.appendText(response + "\n");
-        } catch (IOException e) {
+        } catch (Exception e) {
             conversation.appendText("Something went wrong! Please try again...");
         }
     }
