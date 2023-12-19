@@ -1,11 +1,8 @@
-package chat;
+package dslite.chat;
 
-import chat.client.ChatClient;
-import chat.model.UserConfig;
-import chat.view.BaseView;
-import chat.view.BotView;
-import chat.view.ChatView;
-import chat.view.UserConfigView;
+import dslite.chat.client.ChatClient;
+import dslite.chat.model.UserConfig;
+import dslite.chat.view.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -17,6 +14,7 @@ public class ChatApplication extends Application {
     private UserConfigView configView;
     private ChatView chatView;
     private BotView botView;
+    private GameView gameView;
     private BorderPane root;
     private ChatClient chatClient;
 
@@ -28,7 +26,7 @@ public class ChatApplication extends Application {
         configView = new UserConfigView();
         chatView = new ChatView();
         botView = new BotView();
-
+        gameView = new GameView();
 
         chatClient = new ChatClient(this);
         root = new BorderPane();
@@ -76,5 +74,9 @@ public class ChatApplication extends Application {
 
     public void setChatClient(ChatClient chatClient) {
         this.chatClient = chatClient;
+    }
+
+    public BaseView getGameView() {
+        return gameView;
     }
 }

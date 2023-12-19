@@ -1,6 +1,6 @@
-package chat.client;
+package dslite.chat.client;
 
-import chat.ChatApplication;
+import dslite.chat.ChatApplication;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

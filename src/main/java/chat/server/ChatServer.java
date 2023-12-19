@@ -1,4 +1,4 @@
-package chat.server;
+package dslite.chat.server;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

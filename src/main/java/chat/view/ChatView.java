@@ -1,4 +1,4 @@
-package chat.view;
+package dslite.chat.view;
 
 import javafx.event.EventHandler;
 import javafx.scene.Parent;

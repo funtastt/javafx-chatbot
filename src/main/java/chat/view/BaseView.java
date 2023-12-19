@@ -1,6 +1,6 @@
-package chat.view;
+package dslite.chat.view;
 
-import chat.ChatApplication;
+import dslite.chat.ChatApplication;
 import javafx.scene.Parent;
 
 public abstract class BaseView {

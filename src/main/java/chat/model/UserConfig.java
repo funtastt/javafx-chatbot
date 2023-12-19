@@ -1,4 +1,4 @@
-package chat.model;
+package dslite.chat.model;
 
 public class UserConfig {
 

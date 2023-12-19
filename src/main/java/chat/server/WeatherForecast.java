@@ -1,4 +1,4 @@
-package chat.server;
+package dslite.chat.server;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

@@ -1,6 +1,6 @@
-package chat.view;
+package dslite.chat.view;
 
-import chat.model.UserConfig;
+import dslite.chat.model.UserConfig;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;

@@ -1,6 +1,6 @@
-package chat.view;
+package dslite.chat.view;
 
-import chat.model.UserConfig;
+import dslite.chat.model.UserConfig;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.control.TextArea;
@@ -11,8 +11,8 @@ import javafx.scene.layout.AnchorPane;
 import java.io.File;
 import java.io.IOException;
 
-import static chat.server.CurrencyTracker.sendCurrencyInfo;
-import static chat.server.WeatherForecast.*;
+import static dslite.chat.server.CurrencyTracker.sendCurrencyInfo;
+import static dslite.chat.server.WeatherForecast.*;
 import static javafx.scene.input.KeyEvent.KEY_PRESSED;
 
 public class BotView extends BaseView {
@@ -58,12 +58,17 @@ public class BotView extends BaseView {
                     case "/stop" -> System.exit(0);
                     case "/help" -> showHelp();
                     case "/chat" -> redirectToChat();
+                    case "/play" -> redirectToGame();
                     default -> conversation.appendText("Can't handle such command. Please use \"/help\" command.\n");
                 }
             }
         } else {
             conversation.appendText("You should use \"/start\" firstly!\n");
         }
+    }
+
+    private void redirectToGame() {
+        getChatApplication().setView(getChatApplication().getGameView());
     }
 
     private void showHelp() {
